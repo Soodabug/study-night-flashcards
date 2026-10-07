@@ -1,50 +1,38 @@
-// This file is responsible for rendering the full flashcard set,
-// with buttons to navigate between cards, a form to create new cards,
-// and a button to shuffle the cards.
-
-// This function is responsible for generating the form used to create a new card.
+// The cards of one study set, one card at a time: flip, previous/next,
+// shuffle, and the form to add a card.
 import { renderCardForm } from "./createCard.js";
-// This function is responsible for shuffling the flashcard
+import { renderCardSetsPage } from "./cardSetsPage.js";
 import { shuffle } from "./shuffle.js";
-// Functions responsible for creating toggle button used to toggle the forms visibility
 import { createToggleButton } from "./utilityRenderFunctions.js";
 
-// The flash cards have two sides
-// This generates one side of a flashcard card
+// One side of a flashcard ("term" is the front, "description" the back).
 const renderSide = (text, className) => {
-  // Creates a container element for the card
-  const div = document.createElement("div");
-  // Creates the paragraph that will hold the text content
   const p = document.createElement("p");
   p.textContent = text;
+
+  const div = document.createElement("div");
   div.className = className;
   div.setAttribute("data-cy", `card-${className}`);
-  //Appends the content to the container
   div.append(p);
   return div;
 };
 
-// This generates the flashcard elements
-// Takes a card as an argument
 const generateFlashCard = (card) => {
-  // Creates the Term side
-  const termSide = renderSide(card.term, "term");
-  // Creates the description side
-  const descriptionSide = renderSide(card.description, "description");
-
-  // Creates an inner card that will help with the Flash Card animation
+  // The inner element is the one that turns around (see main.css).
   const innerCard = document.createElement("div");
   innerCard.className = "innerCard";
-  innerCard.append(termSide, descriptionSide);
+  innerCard.append(
+    renderSide(card.term, "term"),
+    renderSide(card.description, "description"),
+  );
 
-  // Creates a container for the card
   const cardContainer = document.createElement("div");
   cardContainer.className = "cardContainer";
   cardContainer.setAttribute("data-cy", "flashcard");
   cardContainer.append(innerCard);
 
-  // Hovering flips the card (see flipcard.css). Touch screens and keyboards
-  // cannot hover, so a click, Enter or Space flips it too.
+  // A click, Enter or Space flips the card, so it works with a mouse,
+  // on a touch screen and with the keyboard.
   cardContainer.tabIndex = 0;
   cardContainer.setAttribute("role", "button");
   cardContainer.setAttribute("aria-label", "Flip card");
@@ -60,79 +48,84 @@ const generateFlashCard = (card) => {
   return cardContainer;
 };
 
-// Renders the flashcards to the DOM one card at a time
-// Includes next and previous buttons.
-// Takes a study set and a current index as arguments
+const createButton = (text, dataCy, onClick, className = "pill light") => {
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.textContent = text;
+  btn.className = className;
+  btn.setAttribute("data-cy", dataCy);
+  btn.addEventListener("click", onClick);
+  return btn;
+};
+
+// Shows the card at `index` of the set (an array of cards).
 const renderFlashCards = (set, index = 0) => {
-  // Clear the main content area
   const main = document.querySelector("main");
   main.innerHTML = "";
 
-  // Creates a container for the page
   const container = document.createElement("div");
-  container.className = "cardPageContainer";
+  container.className = "cardPage";
 
-  // If we are not at the end of the study set
-  // Create the flash card at the current index
+  const back = createButton(
+    "All sets",
+    "back-to-sets",
+    renderCardSetsPage,
+    "backLink",
+  );
+  const top = document.createElement("div");
+  top.className = "cardPageTop";
+  top.append(back);
+  container.append(top);
+
   if (set.length !== 0) {
-    const currentCard = generateFlashCard(set[index]);
+    const counter = document.createElement("p");
+    counter.className = "counter";
+    counter.setAttribute("data-cy", "card-counter");
+    counter.textContent = `${index + 1} / ${set.length}`;
+    top.append(counter);
 
-    // creates Previous button
-    const previousBtn = createNavigationButton("Previous", () => {
-      // If the current index is 0, set the index to the last item in the set.
-      // Allows us to loop to the end of the set
-      index = index > 0 ? index - 1 : set.length - 1;
-      renderFlashCards(set, index);
+    const hint = document.createElement("p");
+    hint.className = "flipHint";
+    hint.textContent = "Click the card to see the other side";
+
+    // Previous on the first card goes to the last one, Next on the last to the first.
+    const previousBtn = createButton("Previous", "card-previous", () => {
+      renderFlashCards(set, index > 0 ? index - 1 : set.length - 1);
+    });
+    const nextBtn = createButton("Next", "card-next", () => {
+      renderFlashCards(set, index < set.length - 1 ? index + 1 : 0);
     });
 
-    //Creates next button
-    const nextBtn = createNavigationButton("Next", () => {
-      // If the current index is at the last item in the set, set the index to 0.
-      // Allows us to loop to the start of the set
-      index = index < set.length - 1 ? index + 1 : 0;
-      renderFlashCards(set, index);
-    });
+    const cardNav = document.createElement("div");
+    cardNav.className = "cardNav";
+    cardNav.append(previousBtn, nextBtn);
 
-    //Creates a container for out buttons
-    const nextAndPrevBtn = document.createElement("div");
-    nextAndPrevBtn.append(previousBtn, nextBtn);
-    nextAndPrevBtn.className = "nextAndPrevBtnContainer";
-
-    //Appends card and buttons to the page container
-    container.append(currentCard, nextAndPrevBtn);
+    container.append(generateFlashCard(set[index]), hint, cardNav);
+  } else {
+    const empty = document.createElement("p");
+    empty.className = "emptySet";
+    empty.textContent = "This set has no cards yet. Add the first one below.";
+    container.append(empty);
   }
 
-  // Generates from for creating cards
   const form = renderCardForm(set);
-  // Sets form to be invisible
-  form.className = "notVisible";
+  form.className = "panel notVisible";
 
-  // Creates button for toggling the form
-  const addCardBtn = createToggleButton("Add New Card", form);
+  const addCardBtn = createToggleButton("Add new card", form);
+  addCardBtn.className = "pill";
   addCardBtn.setAttribute("data-cy", "toggle_form");
 
-  // Creates button for shuffling the cards
-  const shuffleBtn = document.createElement("button");
-  shuffleBtn.textContent = "Shuffle Cards";
-  shuffleBtn.setAttribute("data-cy", "shuffle");
+  const toolbar = document.createElement("div");
+  toolbar.className = "toolbar";
+  if (set.length > 1) {
+    toolbar.append(
+      createButton("Shuffle cards", "shuffle", () => shuffleCards(set), "pill"),
+    );
+  }
+  toolbar.append(addCardBtn);
 
-  // Adds an event listener to the shuffle button.
-  // On click, the flashcards will be shuffled.
-  shuffleBtn.addEventListener("click", () => shuffleCards(set));
-
-  // Appends cards form and shuffle button to the page containers
-  container.append(shuffleBtn, addCardBtn, form);
-  // Appends the container to the dom
+  container.append(toolbar, form);
   main.append(container);
-};
-
-// Creates a navigation button
-const createNavigationButton = (text, onClick) => {
-  const btn = document.createElement("button");
-  btn.textContent = text;
-  btn.setAttribute("data-cy", `card-${text.toLowerCase()}`);
-  btn.addEventListener("click", onClick);
-  return btn;
 };
 
 // Shuffles the set itself instead of showing a shuffled copy.

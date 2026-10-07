@@ -46,6 +46,22 @@ describe("Cards", () => {
     cy.get('[data-cy="card-term"]').should("not.contain", "HTML");
   });
 
+  it("shows which card of the set you are on", () => {
+    cy.get('[data-cy="card-counter"]')
+      .invoke("text")
+      .should("match", /^1 \/ \d+$/);
+
+    cy.get('[data-cy="card-next"]').click();
+    cy.get('[data-cy="card-counter"]')
+      .invoke("text")
+      .should("match", /^2 \/ \d+$/);
+  });
+
+  it("goes back to the sets", () => {
+    cy.get('[data-cy="back-to-sets"]').click();
+    cy.get('[data-cy="card-sets-page"]').should("exist");
+  });
+
   it("shows an error when the card form is empty", () => {
     addCard("", "");
     cy.get('[data-cy="form-error"]').should(

@@ -19,7 +19,7 @@ import {
 // This function will generate the create card form
 const renderCardForm = (set) => {
   // Create a header for the form
-  const h3 = createHeader("h3", "Create Cards", "create_cards");
+  const h3 = createHeader("h3", "New card", "create_cards");
 
   // Creates form element
   const cardForm = document.createElement("form");
@@ -39,7 +39,7 @@ const renderCardForm = (set) => {
   descriptionInput.setAttribute("data-cy", "card-description-input");
 
   //Creates submit input
-  const addCardBtn = createSubmitButton("Add Card");
+  const addCardBtn = createSubmitButton("Add card");
   addCardBtn.setAttribute("data-cy", "card-submit");
   // Handle form submission ane errors
   cardForm.addEventListener("submit", (e) => {

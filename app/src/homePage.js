@@ -1,38 +1,51 @@
-// This file is responsible for loading the home page
-//Imports image for homepage
-import homePageImage from "../images/homePage.webp";
-//Helper functions
+// The home page: what the app is for and a button into the card sets.
 import {
   createHeader,
   createElement,
   createImage,
 } from "./utilityRenderFunctions.js";
 
-//Renders home page
+// new URL(...) is the standard way to get the address of a file next to the code.
+// (A plain "import image from ..." gave an object here, not an address, so the picture was broken.)
+const homePageImage = new URL("../images/homePage.webp", import.meta.url).href;
+
 const renderHomePage = () => {
-  //Gets main element
   const main = document.querySelector("main");
   main.innerHTML = "";
 
-  //Creates header element
-  const header = createHeader("h1", "Study Night", "home_header");
-
-  //Creates subheader element
-  const subHeading = createElement(
-    "h2",
-    "A Digital Study Solution for the Modern World",
+  const header = createHeader(
+    "h1",
+    "Study tonight. Remember tomorrow.",
+    "home_header",
   );
 
-  //Creates elements
-  const image = createImage(homePageImage, "Desk of laptops");
+  const subHeading = createElement(
+    "p",
+    "Make a set, flip through the cards, shuffle, repeat. Your sets stay in this browser.",
+  );
+  subHeading.className = "homeSub";
 
-  //Container for elements
+  // Goes through the menu button, so the menu shows the right page as current.
+  const start = createElement("button", "Open my card sets");
+  start.type = "button";
+  start.className = "pill";
+  start.setAttribute("data-cy", "home-cta");
+  start.addEventListener("click", () => {
+    document.querySelector('[data-cy="nav-cardset"]').click();
+  });
+
+  const text = document.createElement("div");
+  text.append(header, subHeading, start);
+
+  const photo = document.createElement("figure");
+  photo.className = "photo";
+  photo.append(createImage(homePageImage, "Desk with laptops"));
+
   const homeContainer = document.createElement("div");
-  homeContainer.className = "homeContainer";
-
+  homeContainer.className = "home";
   homeContainer.setAttribute("data-cy", "home-page");
+  homeContainer.append(text, photo);
 
-  homeContainer.append(header, subHeading, image);
   main.append(homeContainer);
 };
 

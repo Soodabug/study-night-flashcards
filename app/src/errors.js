@@ -6,7 +6,6 @@ const showError = (message) => {
   if (!existingError) {
     const error = document.createElement("p");
     error.textContent = message;
-    error.style.color = "red";
     error.className = "error";
     error.setAttribute("data-cy", "form-error");
     form.appendChild(error);

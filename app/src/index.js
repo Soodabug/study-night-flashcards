@@ -1,31 +1,30 @@
+import "@fontsource-variable/syne";
+import "@fontsource-variable/dm-sans";
 import { renderHomePage } from "./homePage.js";
 import { renderAboutPage } from "./aboutPage.js";
 import { renderCardSetsPage } from "./cardSetsPage.js";
 
-const pick = (dataCy, id) =>
-  document.querySelector(`[data-cy="${dataCy}"]`) ||
-  document.getElementById(id);
+// Menu button (by its data-cy) -> the page it opens.
+const pages = {
+  "nav-home": renderHomePage,
+  "nav-about": renderAboutPage,
+  "nav-cardset": renderCardSetsPage,
+};
 
-function wireNavigation() {
-  const homeEl = pick("nav-home", "homePage");
-  const aboutEl = pick("nav-about", "aboutPage");
-  const cardEl = pick("nav-cardset", "cardSetPage");
+const menuButton = (name) => document.querySelector(`[data-cy="${name}"]`);
 
-  homeEl?.addEventListener("click", (e) => {
-    e.preventDefault?.();
-    renderHomePage();
-  });
-  aboutEl?.addEventListener("click", (e) => {
-    e.preventDefault?.();
-    renderAboutPage();
-  });
-  cardEl?.addEventListener("click", (e) => {
-    e.preventDefault?.();
-    renderCardSetsPage();
-  });
+// Opens a page and marks its menu button as the current one.
+function open(name) {
+  for (const other of Object.keys(pages)) {
+    menuButton(other)?.removeAttribute("aria-current");
+  }
+  menuButton(name)?.setAttribute("aria-current", "page");
+  pages[name]();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  wireNavigation();
-  renderHomePage();
+  for (const name of Object.keys(pages)) {
+    menuButton(name)?.addEventListener("click", () => open(name));
+  }
+  open("nav-home");
 });

@@ -1,31 +1,38 @@
-// This file renders the about page content
+// The about page.
+import { createElement, createImage } from "./utilityRenderFunctions.js";
 
-import aboutImage from "../images/aboutImage.webp";
-import { createImage } from "./utilityRenderFunctions.js";
+const aboutImage = new URL("../images/aboutImage.webp", import.meta.url).href;
 
 const renderAboutPage = () => {
   const main = document.querySelector("main");
   main.innerHTML = "";
 
-  const aboutContainer = document.createElement("div");
-  aboutContainer.className = "aboutContainer";
+  const header = createElement("h2", "About Study Night");
 
-  // hook for the Cypress tests
-  aboutContainer.setAttribute("data-cy", "about-page");
-
-  const header = document.createElement("h2");
-  header.textContent = "About Study Night";
-
-  const paragraph = document.createElement("p");
-  paragraph.textContent =
-    "Study Night is designed to help learners create and review digital flashcards easily.";
-
-  const image = createImage(
-    aboutImage,
-    "Student with headphones studying at a laptop",
+  const what = createElement(
+    "p",
+    "Study Night is a small flashcards app. Put what you need to learn on cards, group the cards in sets, and go through them until they stick.",
+  );
+  const how = createElement(
+    "p",
+    "Click a card to see its other side. Shuffle when you start remembering the order instead of the answers.",
   );
 
-  aboutContainer.append(header, paragraph, image);
+  const text = document.createElement("div");
+  text.append(header, what, how);
+
+  const photo = document.createElement("figure");
+  photo.className = "photo";
+  photo.append(
+    createImage(aboutImage, "Student with headphones studying at a laptop"),
+  );
+
+  const aboutContainer = document.createElement("div");
+  aboutContainer.className = "about";
+  // hook for the Cypress tests
+  aboutContainer.setAttribute("data-cy", "about-page");
+  aboutContainer.append(text, photo);
+
   main.append(aboutContainer);
 };
 

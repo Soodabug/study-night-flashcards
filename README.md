@@ -6,7 +6,9 @@ A flashcards app: make study sets, add cards, flip through them, shuffle.
 
 Try it: https://soodabug.github.io/study-night-flashcards/
 
-![Card page of Study Night](docs/screenshot.png)
+![Home page of Study Night](docs/screenshot.png)
+
+![A flashcard](docs/screenshot-card.png)
 
 ## About this project
 
@@ -23,6 +25,8 @@ After the course I kept going and added a few things of my own:
 - cards flip on click and with the keyboard (before, only on hover, which does not work on phones)
 - fixed a bug I found while writing tests: a card added after shuffling was lost
 - smaller images (the home image went from 1.4 MB to 85 KB)
+- a new design, a card counter, a way back to the sets, and a menu that shows which page you are on
+- fixed the pictures on the home and about page: they were not loading, and no test noticed, so now there is a test for it
 
 ## Run it
 
@@ -45,14 +49,14 @@ If the app is already running you can use `npm run cypress`, or `npm run cypress
 
 What is tested:
 
-| File                            | What it checks                                                       |
-| ------------------------------- | -------------------------------------------------------------------- |
-| `test/shuffle.js`               | shuffle keeps all items and does not change its input                |
-| `test/storage.js`               | saving and loading sets, broken or blocked storage                   |
-| `cypress/e2e/navigation.cy.js`  | the three pages open from the menu                                   |
-| `cypress/e2e/form.cy.js`        | creating a set, empty title shows an error                           |
-| `cypress/e2e/cards.cy.js`       | showing, flipping, next/previous, adding cards, form errors, shuffle |
-| `cypress/e2e/persistence.cy.js` | sets and cards are still there after a reload                        |
+| File                            | What it checks                                                                   |
+| ------------------------------- | -------------------------------------------------------------------------------- |
+| `test/shuffle.js`               | shuffle keeps all items and does not change its input                            |
+| `test/storage.js`               | saving and loading sets, broken or blocked storage                               |
+| `cypress/e2e/navigation.cy.js`  | the pages open from the menu, the pictures load, the menu marks the current page |
+| `cypress/e2e/form.cy.js`        | creating a set, empty title shows an error                                       |
+| `cypress/e2e/cards.cy.js`       | showing, flipping, next/previous, counter, adding cards, form errors, shuffle    |
+| `cypress/e2e/persistence.cy.js` | sets and cards are still there after a reload                                    |
 
 ## Build
 
