@@ -27,5 +27,5 @@ The app is fully tested with **Cypress E2E tests**, and all tests pass successfu
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/Soodehub/nd0011-c4-starter.git
+   git clone https://github.com/Soodabug/study-night-flashcards.git
    ```
