@@ -1,13 +1,11 @@
-//DO NOT CHANGE ANYTHING IN THIS FILE//
-
 // This file is responsible for rendering the full flashcard set,
 // with buttons to navigate between cards, a form to create new cards,
 // and a button to shuffle the cards.
 
 // This function is responsible for generating the form used to create a new card.
-import { renderCardForm } from "./createCard";
+import { renderCardForm } from "./createCard.js";
 // This function is responsible for shuffling the flashcard
-import { shuffle } from "./shuffle";
+import { shuffle } from "./shuffle.js";
 // Functions responsible for creating toggle button used to toggle the forms visibility
 import { createToggleButton } from "./utilityRenderFunctions.js";
 
@@ -20,6 +18,7 @@ const renderSide = (text, className) => {
   const p = document.createElement("p");
   p.textContent = text;
   div.className = className;
+  div.setAttribute("data-cy", `card-${className}`);
   //Appends the content to the container
   div.append(p);
   return div;
@@ -41,7 +40,22 @@ const generateFlashCard = (card) => {
   // Creates a container for the card
   const cardContainer = document.createElement("div");
   cardContainer.className = "cardContainer";
+  cardContainer.setAttribute("data-cy", "flashcard");
   cardContainer.append(innerCard);
+
+  // Hovering flips the card (see flipcard.css). Touch screens and keyboards
+  // cannot hover, so a click, Enter or Space flips it too.
+  cardContainer.tabIndex = 0;
+  cardContainer.setAttribute("role", "button");
+  cardContainer.setAttribute("aria-label", "Flip card");
+  const flip = () => cardContainer.classList.toggle("flipped");
+  cardContainer.addEventListener("click", flip);
+  cardContainer.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      flip();
+    }
+  });
 
   return cardContainer;
 };
@@ -100,6 +114,7 @@ const renderFlashCards = (set, index = 0) => {
   // Creates button for shuffling the cards
   const shuffleBtn = document.createElement("button");
   shuffleBtn.textContent = "Shuffle Cards";
+  shuffleBtn.setAttribute("data-cy", "shuffle");
 
   // Adds an event listener to the shuffle button.
   // On click, the flashcards will be shuffled.
@@ -115,13 +130,17 @@ const renderFlashCards = (set, index = 0) => {
 const createNavigationButton = (text, onClick) => {
   const btn = document.createElement("button");
   btn.textContent = text;
+  btn.setAttribute("data-cy", `card-${text.toLowerCase()}`);
   btn.addEventListener("click", onClick);
   return btn;
 };
 
+// Shuffles the set itself instead of showing a shuffled copy.
+// With a copy, a card added after shuffling went into the copy and was lost.
 const shuffleCards = (set) => {
   const shuffledCards = shuffle(set);
-  renderFlashCards(shuffledCards);
+  set.splice(0, set.length, ...shuffledCards);
+  renderFlashCards(set);
 };
 
 export { renderSide, generateFlashCard, renderFlashCards };

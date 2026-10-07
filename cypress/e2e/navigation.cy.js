@@ -1,6 +1,6 @@
 describe("Navigation", () => {
   beforeEach(() => {
-    cy.visit("http://localhost:1234");
+    cy.visit("/");
   });
 
   it("navigates to Card Set page", () => {

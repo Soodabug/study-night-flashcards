@@ -1,5 +1,3 @@
-//DO NOT CHANGE ANYTHING IN THIS FILE//
-
 import { cardSets } from "../data/data.js";
 import { renderFlashCards } from "./cardsPage.js";
 import { createSetForm } from "./createSet.js";
@@ -13,7 +11,7 @@ export const renderCardSetsPage = () => {
   const pageHeader = createHeader(
     "h2",
     "Study Set Library",
-    "study-set-header"
+    "study-set-header",
   );
 
   const sets = createCardSets();

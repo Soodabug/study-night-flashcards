@@ -1,4 +1,7 @@
-const cardSets = [
+import { loadSets } from "../src/storage.js";
+
+// The sample sets a new visitor starts with.
+const sampleSets = [
   {
     id: 1,
     title: "Web Dev Flash Cards",
@@ -109,4 +112,7 @@ const cardSets = [
     ],
   },
 ];
+// Sets the visitor created or changed earlier are loaded from the browser.
+const cardSets = loadSets(sampleSets);
+
 export { cardSets };

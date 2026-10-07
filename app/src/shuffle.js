@@ -1,4 +1,3 @@
-// starter/src/shuffle.js
 export function shuffle(cards) {
   const newCardsArray = [...cards];
   let current = newCardsArray.length;

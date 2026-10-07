@@ -1,6 +1,6 @@
 describe("Forms", () => {
   beforeEach(() => {
-    cy.visit("http://localhost:1234");
+    cy.visit("/");
 
     cy.get('[data-cy="nav-cardset"]').click();
     cy.get('[data-cy="toggle_form"]').click();

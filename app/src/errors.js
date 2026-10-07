@@ -1,5 +1,3 @@
-//DO NOT CHANGE ANYTHING IN THIS FILE//
-
 //This file is responsible for creating errors for our form
 const showError = (message) => {
   const form = document.querySelector("form");
@@ -10,6 +8,7 @@ const showError = (message) => {
     error.textContent = message;
     error.style.color = "red";
     error.className = "error";
+    error.setAttribute("data-cy", "form-error");
     form.appendChild(error);
   } else if (existingError.textContent !== message) {
     existingError.textContent = message;

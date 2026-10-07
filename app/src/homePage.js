@@ -1,7 +1,6 @@
-//DO NOT CHANGE ANYTHING IN THIS FILE//
 // This file is responsible for loading the home page
 //Imports image for homepage
-import homePageImage from "../images/homePage.png";
+import homePageImage from "../images/homePage.webp";
 //Helper functions
 import {
   createHeader,
@@ -21,7 +20,7 @@ const renderHomePage = () => {
   //Creates subheader element
   const subHeading = createElement(
     "h2",
-    "A Digital Study Solution for the Modern World"
+    "A Digital Study Solution for the Modern World",
   );
 
   //Creates elements

@@ -1,8 +1,8 @@
-// starter/src/createSet.js
 // This file generates the form to create a new Study Set.
 
 import { renderCardSetsPage } from "./cardSetsPage.js";
 import { showError } from "./errors.js";
+import { saveSets } from "./storage.js";
 import {
   createLabel,
   createInput,
@@ -64,6 +64,7 @@ const submitSet = (e, setCards) => {
   // Create new set
   const id = setCards.length ? setCards[setCards.length - 1].id + 1 : 1;
   setCards.push({ id, title: title.trim(), cards: [] });
+  saveSets(setCards);
 
   // Success toast (attach to body so it survives re-render)
   const toast = document.createElement("div");

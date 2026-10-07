@@ -39,7 +39,8 @@ body main div.innerCard {
   transform-style: preserve-3d;
 }
 
-.cardContainer:hover .innerCard {
+.cardContainer:hover .innerCard,
+.cardContainer.flipped .innerCard {
   transform: rotateY(180deg);
 }
 
@@ -167,4 +168,14 @@ body main div .cardPageContainer {
     width: 90%;
     margin: 5px 0;
   }
+}
+
+/* The card can be flipped with the keyboard, so show where the focus is. */
+.cardContainer {
+  cursor: pointer;
+}
+
+.cardContainer:focus-visible {
+  outline: 3px solid #1d4ed8;
+  outline-offset: 4px;
 }

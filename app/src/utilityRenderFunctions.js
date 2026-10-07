@@ -1,5 +1,3 @@
-// starter/src/utilityRenderFunctions.js
-
 // Create a general element with specified text
 export const createElement = (elementType, text) => {
   const element = document.createElement(elementType);
@@ -26,7 +24,7 @@ export const createHeader = (headerType, text, dataCy) => {
 // Create a button that toggles the visibility of the form
 export const createToggleButton = (text, element) => {
   const button = document.createElement("button");
-  button.type = "button"; // جلوگیری از submit ناخواسته
+  button.type = "button"; // never submit the form by accident
   button.textContent = text;
   button.addEventListener("click", (e) => {
     e.preventDefault();
